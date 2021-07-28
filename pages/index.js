@@ -1,5 +1,6 @@
 import Head from "next/head"
 import Parser from "rss-parser"
+import Link from "next/link"
 
 const Home = (props) => (
   <div>
@@ -19,6 +20,13 @@ const Home = (props) => (
             <h1 className="text-3xl font-bold leading-tight text-gray-900">
               Latest posts
             </h1>
+            <p>
+              <Link href="/form">
+                <p className="underline cursor-pointer mt-2">
+                  <a>Add a new blog</a>
+                </p>
+              </Link>
+            </p>
           </div>
         </div>
       </header>
