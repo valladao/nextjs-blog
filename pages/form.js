@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 /* eslint-disable import/no-anonymous-default-export */
+import { Router } from "next/dist/client/router"
 import Head from "next/head"
 import Link from "next/link"
 import { useState } from "react"
@@ -10,6 +11,30 @@ export default function () {
   const [blogurl, setBlogurl] = useState("")
   const [feedurl, setFeedurl] = useState("")
   const [notes, setNotes] = useState("")
+  const [response, setResponse] = useState("")
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    try {
+      const res = await fetch("/api/blog", {
+        method: "POST",
+        body: JSON.stringify({ name, email, blogurl, feedurl, notes }),
+        headers: { "Content-Type": "application/json" },
+      })
+
+      const json = await res.json()
+
+      if (json.success) {
+        alert("Thank you for submitting your blog!")
+        Router.push("/")
+      } else {
+        setResponse(json.message)
+      }
+    } catch (error) {
+      setResponse("An error occured while submitting the form")
+    }
+  }
 
   return (
     <div>
@@ -40,7 +65,7 @@ export default function () {
         </header>
 
         <main>
-          <p className="text-center pb-5"></p>
+          <p className="text-center pb-5">{response}</p>
 
           <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div>
@@ -49,6 +74,7 @@ export default function () {
                   className="mt-5 md:mt-0 md:col-span-2"
                   action=""
                   method="POST"
+                  onSubmit={handleSubmit}
                 >
                   <div className="shadow sm:rounded-md sm:overflow-hidden">
                     <div className="px-4 py-5 bg-white sm:p-6">
