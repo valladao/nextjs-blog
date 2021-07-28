@@ -1,6 +1,7 @@
 import Head from "next/head"
+import Parser from "rss-parser"
 
-const Home = () => (
+const Home = (props) => (
   <div>
     <Head>
       <title>Latest posts</title>
@@ -39,7 +40,34 @@ const Home = () => (
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white"></tbody>
+                      <tbody className="bg-white">
+                        {props.posts
+                          .sort((a, b) => new Date(b.date) - new Date(a.date))
+                          .map((value, index) => {
+                            return (
+                              <tr key={index}>
+                                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                  <div className="flex items-center">
+                                    <div className="ml-4">
+                                      <div className="text-sm leading-5 font-medium text-gray-900 underline">
+                                        <a href={value.link}>{value.title}</a>
+                                      </div>
+                                      <div className="text-sm leading-5 text-gray-500">
+                                        {value.name}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                  <div className="text-sm leading-5 text-gray-900">
+                                    {new Date(value.date).toDateString()}
+                                  </div>
+                                  <div className="text-sm leading-5 text-gray-500"></div>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                      </tbody>
                     </table>
                   </div>
                 </div>
@@ -51,5 +79,28 @@ const Home = () => (
     </div>
   </div>
 )
+
+export async function getStaticProps(context) {
+  const parser = new Parser()
+
+  const data = await parser.parseURL("https://flaviocopes.com/index.xml")
+
+  const posts = []
+
+  data.items.slice(0, 10).forEach((item) => {
+    posts.push({
+      title: item.title,
+      link: item.link,
+      date: item.isoDate,
+      name: "Flavio Copes",
+    })
+  })
+
+  return {
+    props: {
+      posts,
+    },
+  }
+}
 
 export default Home
