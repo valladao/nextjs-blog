@@ -2,8 +2,15 @@
 /* eslint-disable import/no-anonymous-default-export */
 import Head from "next/head"
 import Link from "next/link"
+import { useState } from "react"
 
 export default function () {
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [blogurl, setBlogurl] = useState("")
+  const [feedurl, setFeedurl] = useState("")
+  const [notes, setNotes] = useState("")
+
   return (
     <div>
       <Head>
@@ -51,6 +58,8 @@ export default function () {
                       <input
                         required
                         className="mb-5 mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
                       />
                       <label className="block text-sm font-medium leading-5 text-gray-700">
                         Email address
@@ -59,6 +68,8 @@ export default function () {
                         required
                         type="email"
                         className="mb-5 mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
                       />
                       <label className="block text-sm font-medium leading-5 text-gray-700">
                         Blog URL
@@ -68,6 +79,8 @@ export default function () {
                         required
                         className="mb-5 mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                         placeholder="https://www.example.com"
+                        value={blogurl}
+                        onChange={(event) => setBlogurl(event.target.value)}
                       />
                       <label className="block text-sm font-medium leading-5 text-gray-700">
                         RSS Feed URL
@@ -77,6 +90,8 @@ export default function () {
                         required
                         className="mb-5 mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                         placeholder="https://www.example.com/feed"
+                        value={feedurl}
+                        onChange={(event) => setFeedurl(event.target.value)}
                       />
 
                       <label
@@ -90,6 +105,8 @@ export default function () {
                           rows="3"
                           className="form-textarea mt-1 block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           placeholder="Anything you want to tell us!"
+                          value={notes}
+                          onChange={(event) => setNotes(event.target.value)}
                         ></textarea>
                       </div>
                       <p className="mt-2 text-sm text-gray-500">
