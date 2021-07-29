@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 /* eslint-disable import/no-anonymous-default-export */
-import { Router } from "next/dist/client/router"
+import Router from "next/router"
 import Head from "next/head"
 import Link from "next/link"
 import { useState } from "react"
