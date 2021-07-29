@@ -2,6 +2,11 @@ import Head from "next/head"
 import Parser from "rss-parser"
 import Link from "next/link"
 
+var Airtable = require("airtable")
+var base = new Airtable({ apiKey: "keyxG2h8neqz2Xcp5" }).base(
+  "app3olAoYwbcz3rYm"
+)
+
 const Home = (props) => (
   <div>
     <Head>
@@ -91,18 +96,38 @@ const Home = (props) => (
 export async function getStaticProps(context) {
   const parser = new Parser()
 
-  const data = await parser.parseURL("https://flaviocopes.com/index.xml")
-
   const posts = []
 
-  data.items.slice(0, 10).forEach((item) => {
-    posts.push({
-      title: item.title,
-      link: item.link,
-      date: item.isoDate,
-      name: "Flavio Copes",
+  const records = await base("Table 1")
+    .select({
+      view: "Grid view",
     })
-  })
+    .firstPage()
+
+  const feeds = records
+    .filter((record) => {
+      if (record.get("approved") === true) return true
+    })
+    .map((record) => {
+      return {
+        id: record.id,
+        name: record.get("name"),
+        blogurl: record.get("blogurl"),
+        feedurl: record.get("feedurl"),
+      }
+    })
+
+  for (const feed of feeds) {
+    const data = await parser.parseURL(feed.feedurl)
+    data.items.slice(0, 10).forEach((item) => {
+      posts.push({
+        title: item.title,
+        link: item.link,
+        date: item.isoDate,
+        name: feed.name,
+      })
+    })
+  }
 
   return {
     props: {
